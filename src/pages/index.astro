@@ -792,10 +792,69 @@ import Layout from '../layouts/Layout.astro';
   }
 
   /* ── RESPONSIVE ── */
-  @media (max-width: 700px) {
+  /* ════════════════════════════════════
+     RESPONSIVE — Tablet (≤ 900px)
+  ════════════════════════════════════ */
+  @media (max-width: 900px) {
+    .container {
+      padding: 0 2rem;
+    }
+
+    .about-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+    }
+
+    .about {
+      padding: 4rem 0;
+    }
+
+    .form-section {
+      padding: 4rem 0 6rem;
+    }
+  }
+
+  /* ════════════════════════════════════
+     RESPONSIVE — Mobile (≤ 640px)
+  ════════════════════════════════════ */
+  @media (max-width: 640px) {
+    .container {
+      padding: 0 1.25rem;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 3rem 1.25rem 2.5rem;
+      min-height: 100svh;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+    }
+
+    .title-rec {
+      font-size: clamp(0.55rem, 2.8vw, 0.9rem);
+      letter-spacing: 0.3em;
+    }
+
+    .hero-sub {
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+    }
+
+    .hero-line {
+      height: 2.5rem;
+    }
+
+    /* About */
+    .about {
+      padding: 3.5rem 0;
+    }
+
     .about-grid {
       grid-template-columns: 1fr;
-      gap: 3rem;
+      gap: 2.5rem;
     }
 
     .about-details {
@@ -805,14 +864,102 @@ import Layout from '../layouts/Layout.astro';
       padding-top: 2rem;
     }
 
+    /* Form section */
+    .form-section {
+      padding: 3.5rem 0 5rem;
+    }
+
+    .form-intro {
+      font-size: 0.8rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Form rows: stack all to single column */
     .form-row {
       grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    .cr-form {
+      gap: 1.25rem;
+    }
+
+    /* File + link group: reduce padding */
+    .file-link-group {
+      padding: 1rem;
+    }
+
+    .file-btn {
+      font-size: 0.7rem;
+      padding: 0.55rem 0.9rem;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .file-name-display {
+      text-align: center;
+    }
+
+    /* Submit button */
+    .submit-btn {
+      padding: 1rem 1.25rem;
+      font-size: 0.7rem;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 2rem 0;
     }
 
     .footer-inner {
       flex-direction: column;
       align-items: flex-start;
       gap: 1.25rem;
+    }
+
+    .footer-links {
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+  }
+
+  /* ════════════════════════════════════
+     RESPONSIVE — Small mobile (≤ 380px)
+  ════════════════════════════════════ */
+  @media (max-width: 380px) {
+    .container {
+      padding: 0 1rem;
+    }
+
+    .hero {
+      padding: 2.5rem 1rem 2rem;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+    }
+
+    /* Reduce section padding even further */
+    .about {
+      padding: 2.5rem 0;
+    }
+
+    .form-section {
+      padding: 2.5rem 0 4rem;
+    }
+
+    .section-label {
+      margin-bottom: 1.75rem;
+    }
+
+    .file-link-group {
+      padding: 0.75rem;
+    }
+
+    .footer-links {
+      flex-direction: column;
+      gap: 1rem;
     }
   }
 </style>
