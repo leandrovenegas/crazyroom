@@ -3,13 +3,94 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="icon" type="image/png" href="/favicon.png" />
+		<link rel="apple-touch-icon" href="/favicon.png" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content="Convocatoria abierta para la escena techno de Valparaíso. CRAZY ROOM REC LIVE SESSION." />
 		<title>CRAZY ROOM — REC LIVE SESSION</title>
+		<!-- Google Fonts — tipografía de impacto estilo Boiler Room -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&family=Bebas+Neue&display=swap"
+			rel="stylesheet"
+		/>
 	</head>
 	<body>
+		<!--
+			SVG de fondo: el filtro Y el rect están en el MISMO SVG.
+			Esto garantiza que el filtro se renderiza — cuando el filtro
+			está en un SVG separado y se aplica a un div vacío, muchos
+			browsers no renderizan nada porque SourceGraphic es transparente.
+			Aquí el rect blanco ES la fuente, y el filtro opera sobre él.
+
+			Pipeline del filtro:
+			  CAPA A (manchas de fotocopiadora):
+			    feTurbulence baja freq → feGaussianBlur fuerte
+			    → feColorMatrix B&W → feComponentTransfer contraste duro
+			  CAPA B (grano fino):
+			    feTurbulence alta freq → feColorMatrix B&W
+			    → feComponentTransfer contraste suave
+			  FUSIÓN: feBlend screen (A + B)
+		-->
+		<svg
+			class="photocopier-grain"
+			aria-hidden="true"
+			focusable="false"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<defs>
+				<filter
+					id="pcf"
+					x="0%" y="0%" width="100%" height="100%"
+					color-interpolation-filters="sRGB"
+				>
+					<!-- CAPA A — manchas borrosas -->
+				<feTurbulence
+					type="fractalNoise"
+					baseFrequency="0.008"
+					numOctaves="1"
+					seed="200"
+					stitchTiles="stitch"
+					result="coarse"
+				/>
+				<feGaussianBlur in="coarse" stdDeviation="40" result="blobs"/>
+				<feColorMatrix type="saturate" values="0" in="blobs" result="gBlobs"/>
+				<feComponentTransfer in="gBlobs" result="copyLayer">
+					<feFuncR type="linear" slope="9" intercept="-4"/>
+					<feFuncG type="linear" slope="9" intercept="-4"/>
+					<feFuncB type="linear" slope="9" intercept="-4"/>
+					</feComponentTransfer>
+
+					<!-- CAPA B — grano fino -->
+					<feTurbulence
+						type="fractalNoise"
+						baseFrequency="1.2"
+						numOctaves="4"
+						seed="11"
+						stitchTiles="stitch"
+						result="fine"
+					/>
+					<feColorMatrix type="saturate" values="0" in="fine" result="gFine"/>
+					<feComponentTransfer in="gFine" result="grainLayer">
+						<feFuncR type="linear" slope="2.5" intercept="-0.8"/>
+						<feFuncG type="linear" slope="2.5" intercept="-0.8"/>
+						<feFuncB type="linear" slope="2.5" intercept="-0.8"/>
+					</feComponentTransfer>
+
+					<!-- FUSIÓN A + B -->
+					<feBlend in="copyLayer" in2="grainLayer" mode="screen"/>
+				</filter>
+			</defs>
+
+			<!--
+				El rect ocupa todo el SVG y recibe el filtro.
+				fill="white" garantiza que SourceGraphic sea opaco
+				para que el filtro tenga algo con qué trabajar.
+			-->
+			<rect width="100%" height="100%" fill="white" filter="url(#pcf)"/>
+		</svg>
+
 		<slot />
 	</body>
 </html>
@@ -38,7 +119,7 @@
 	}
 
 	body {
-		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+		font-family: 'Barlow Condensed', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 		font-size: 16px;
 		line-height: 1.6;
 		background: #050505;
@@ -49,39 +130,83 @@
 	}
 
 	/*
-	 * ── Film grain overlay ──────────────────────────────────────────
-	 * Capa 1 (::before): ruido fino de alta frecuencia — el grano base
-	 * Capa 2 (::after):  ruido más grueso — da profundidad y variación
-	 * Ambas capas usan mix-blend-mode: overlay sobre fondo negro
-	 * para que el efecto sea blanco sobre negro (no añade color).
-	 * ─────────────────────────────────────────────────────────────────
+	 * El SVG tiene position:fixed y ocupa toda la pantalla.
+	 * mix-blend-mode: screen — sobre fondo negro, screen suma la
+	 * luminancia del grain al negro: negro(0) + grain = grain.
+	 * Con overlay sobre negro el resultado siempre es negro (por eso
+	 * no se veía nada). Screen en cambio sí es visible sobre negro.
+	 * opacity controla la intensidad total.
 	 */
-
-	/* Capa 1 — grano fino */
-	body::before {
-		content: '';
+	.photocopier-grain {
 		position: fixed;
 		inset: 0;
+		width: 100%;
+		height: 100%;
 		pointer-events: none;
 		z-index: 9999;
-		opacity: 0.32;
-		mix-blend-mode: overlay;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23g)'/%3E%3C/svg%3E");
-		background-repeat: repeat;
-		background-size: 256px 256px;
-	}
-
-	/* Capa 2 — grano grueso / profundidad */
-	body::after {
-		content: '';
-		position: fixed;
-		inset: 0;
-		pointer-events: none;
-		z-index: 9998;
-		opacity: 0.18;
-		mix-blend-mode: overlay;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512'%3E%3Cfilter id='g2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='512' height='512' filter='url(%23g2)'/%3E%3C/svg%3E");
-		background-repeat: repeat;
-		background-size: 512px 512px;
+		opacity: 0.7;
+		mix-blend-mode: screen;
 	}
 </style>
+
+<script>
+  (function () {
+    const filter   = document.getElementById('pcf');
+    if (!filter) return;
+
+    const turbA    = filter.querySelector('feTurbulence:first-of-type');
+    const turbB    = filter.querySelector('feTurbulence:last-of-type');
+    const blurNode = filter.querySelector('feGaussianBlur');
+
+    if (!turbA || !turbB || !blurNode) return;
+
+    // ── Parámetros ───────────────────────────────────────────────
+
+    // 1. Seed flicker — cada cuántos frames cambia el grano
+    //    2  = 30fps (agresivo / estática)
+    //    12 = ~5fps (sutil / apenas perceptible)
+    const FLICKER_EVERY = 120;
+
+    let seedA = parseInt(turbA.getAttribute('seed') || '200');
+    let seedB = parseInt(turbB.getAttribute('seed') || '11');
+
+    // 2. Blob breathing — amplitud e velocidad de las manchas
+    const freqBase  = parseFloat(turbA.getAttribute('baseFrequency') || '0.1');
+    const freqAmp   = freqBase * 0.12;   // ±12% del base (antes ±30%)
+    const freqSpeed = 0.00022;           // muy lento (antes 0.0008)
+
+    // 3. Blur breathing — amplitud y velocidad del desenfoque
+    const blurBase  = parseFloat(blurNode.getAttribute('stdDeviation') || '9');
+    const blurAmp   = blurBase * 0.15;   // ±15% del base (antes ±40%)
+    const blurSpeed = 0.00008;           // ultra lento (antes 0.0005)
+
+    // ── Loop ─────────────────────────────────────────────────────
+
+    let frame = 0;
+
+    function tick(now) {
+      frame++;
+
+      // 1. Seed flicker — sutil, no interrumpe la lectura
+      if (frame % FLICKER_EVERY === 0) {
+        seedA = (seedA % 9999) + 1;
+        seedB = (seedB % 9999) + 7;
+        turbA.setAttribute('seed', seedA);
+        turbB.setAttribute('seed', seedB);
+      }
+
+      // 2. Blob breathing — expansión lenta y orgánica
+      const t       = now * 0.001;
+      const newFreq = freqBase + Math.sin(t * freqSpeed * 1000) * freqAmp;
+      turbA.setAttribute('baseFrequency', newFreq.toFixed(5));
+
+      // 3. Blur breathing — respira muy despacio
+      const newBlur = blurBase + Math.cos(t * blurSpeed * 1000) * blurAmp;
+      blurNode.setAttribute('stdDeviation', Math.max(1, newBlur).toFixed(2));
+
+      requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+  })();
+</script>
