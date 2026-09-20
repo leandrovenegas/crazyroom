@@ -2,46 +2,48 @@
 import Layout from '../layouts/Layout.astro';
 import SubNav from '../components/SubNav.astro';
 
-// Array de videos: cuando tengas los links de YouTube, simplemente coloca el link o ID en youtubeUrl
+// Array de videos: sesiones en vivo de CRAZY ROOM
 const videos = [
+  {
+    id: 'lexx',
+    sessionNumber: '02',
+    title: 'CRAZY ROOM SESSIONS #02',
+    artist: 'LEXX LEXX LEXX',
+    genre: 'TECHNO / LIVE SESSION',
+    location: 'VALPARAÍSO',
+    date: 'DISPONIBLE',
+    youtubeUrl: 'https://www.youtube.com/watch?v=FjcKjew1qug&t=5s',
+    thumbnail: '/thumb-lexx.png',
+  },
+  {
+    id: 'josemanojo',
+    sessionNumber: '02',
+    title: 'CRAZY ROOM SESSIONS #02',
+    artist: 'JOSEMANOJO',
+    genre: 'TECHNO / HYBRID SESSION',
+    location: 'VALPARAÍSO',
+    date: 'DISPONIBLE',
+    youtubeUrl: 'https://youtu.be/RFzrFCf9ydk?si=748IcHqykEWPsFbD',
+    thumbnail: '/thumb-session-02.png',
+  },
   {
     id: '1',
     sessionNumber: '01',
-    title: 'CRAZY ROOM LIVE REC — SESSION #01',
-    artist: 'LINEUP POR CONFIRMAR',
+    title: 'CRAZY ROOM SESSIONS #01',
+    artist: 'LINEUP POR ANUNCIAR',
     genre: 'RAW / INDUSTRIAL TECHNO',
     location: 'VALPARAÍSO',
-    date: 'TEMPORADA 2026',
-    youtubeUrl: '', // Coloca aquí el link de YouTube cuando esté disponible
-  },
-  {
-    id: '2',
-    sessionNumber: '02',
-    title: 'CRAZY ROOM LIVE REC — SESSION #02',
-    artist: 'LINEUP POR CONFIRMAR',
-    genre: 'HYPNOTIC / HARD GROOVE',
-    location: 'VALPARAÍSO',
-    date: 'TEMPORADA 2026',
+    date: 'PRÓXIMAMENTE',
     youtubeUrl: '',
   },
   {
     id: '3',
     sessionNumber: '03',
-    title: 'CRAZY ROOM LIVE REC — SESSION #03',
-    artist: 'LINEUP POR CONFIRMAR',
+    title: 'CRAZY ROOM SESSIONS #03',
+    artist: 'LINEUP POR ANUNCIAR',
     genre: 'MODULAR LIVE ACT',
     location: 'VALPARAÍSO',
-    date: 'TEMPORADA 2026',
-    youtubeUrl: '',
-  },
-  {
-    id: '4',
-    sessionNumber: '04',
-    title: 'CRAZY ROOM LIVE REC — SESSION #04',
-    artist: 'LINEUP POR CONFIRMAR',
-    genre: 'DARK TECHNO / EXPERIMENTAL',
-    location: 'VALPARAÍSO',
-    date: 'TEMPORADA 2026',
+    date: 'PRÓXIMAMENTE',
     youtubeUrl: '',
   },
 ];
@@ -51,7 +53,10 @@ function getEmbedUrl(input: string): string {
   if (!input) return '';
   const match = input.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
   if (match && match[1]) {
-    return `https://www.youtube-nocookie.com/embed/${match[1]}`;
+    const videoId = match[1];
+    const timeMatch = input.match(/[?&]t=(\d+)s?/);
+    const startParam = timeMatch ? `?start=${timeMatch[1]}` : '';
+    return `https://www.youtube-nocookie.com/embed/${videoId}${startParam}`;
   }
   if (input.trim().length === 11) {
     return `https://www.youtube-nocookie.com/embed/${input.trim()}`;
@@ -129,19 +134,38 @@ function getEmbedUrl(input: string): string {
         {videos.map((item) => {
           const embedUrl = getEmbedUrl(item.youtubeUrl);
           const hasVideo = Boolean(embedUrl);
+          const autoplayUrl = embedUrl ? (embedUrl.includes('?') ? `${embedUrl}&autoplay=1` : `${embedUrl}?autoplay=1`) : '';
 
           return (
             <article class="video-card">
               <div class="video-media-wrap">
                 {hasVideo ? (
-                  <iframe
-                    src={embedUrl}
-                    title={item.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                    class="video-iframe"
-                    loading="lazy"
-                  ></iframe>
+                  item.thumbnail ? (
+                    <div class="video-facade" data-embed={autoplayUrl}>
+                      <img src={item.thumbnail} alt={item.title} class="facade-img" />
+                      <div class="facade-overlay">
+                        <div class="rec-badge">
+                          <span class="rec-dot"></span>
+                          <span>REC LIVE SESSION #{item.sessionNumber}</span>
+                        </div>
+                        <div class="play-icon-box" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+                            <polygon points="6,4 20,12 6,20" />
+                          </svg>
+                        </div>
+                        <span class="placeholder-notice">REPRODUCIR SESIÓN</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <iframe
+                      src={embedUrl}
+                      title={item.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                      class="video-iframe"
+                      loading="lazy"
+                    ></iframe>
+                  )
                 ) : (
                   <div class="video-placeholder">
                     <div class="placeholder-overlay">
@@ -448,6 +472,49 @@ function getEmbedUrl(input: string): string {
     display: block;
   }
 
+  /* Fachada interactiva con miniatura personalizada */
+  .video-facade {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .facade-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease, filter 0.35s ease;
+    filter: brightness(0.85) contrast(110%);
+  }
+
+  .video-card:hover .facade-img {
+    transform: scale(1.04);
+    filter: brightness(0.95) contrast(115%);
+  }
+
+  .facade-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.85) 100%);
+    padding: 1.5rem;
+    transition: background 0.25s ease;
+  }
+
+  .video-card:hover .facade-overlay {
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
+  }
+
   /* Placeholder estético para videos */
   .video-placeholder {
     width: 100%;
@@ -691,3 +758,23 @@ function getEmbedUrl(input: string): string {
     }
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.video-facade').forEach((facade) => {
+    facade.addEventListener('click', () => {
+      const embedUrl = facade.getAttribute('data-embed');
+      if (embedUrl) {
+        const iframe = document.createElement('iframe');
+        iframe.src = embedUrl;
+        iframe.className = 'video-iframe';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        const parent = facade.parentElement;
+        if (parent) {
+          parent.innerHTML = '';
+          parent.appendChild(iframe);
+        }
+      }
+    });
+  });
+</script>

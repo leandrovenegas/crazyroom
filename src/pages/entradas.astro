@@ -1,6 +1,37 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SubNav from '../components/SubNav.astro';
+
+// Eventos anteriores y afiches oficiales
+const flyers = [
+  {
+    image: '/flyer-helloketta.png',
+    artist: 'HELLOKETTA',
+    session: 'LIVE SESSION',
+    date: 'VIERNES 04 ABRIL · 00:00 HRS',
+    location: 'GÁLVEZ #49 CERRO CONCEPCIÓN',
+    city: 'VALPARAÍSO',
+    status: 'EDICIÓN ANTERIOR',
+  },
+  {
+    image: '/flyer-josemanojo.png',
+    artist: 'JOSEMANOJO',
+    session: 'HYBRID SESSION',
+    date: 'VIERNES 28 FEBRERO · 00:00 HRS',
+    location: 'GÁLVEZ #49 CERRO CONCEPCIÓN',
+    city: 'VALPARAÍSO',
+    status: 'EDICIÓN ANTERIOR',
+  },
+  {
+    image: '/flyer-gonzalo-barrera.jpg',
+    artist: 'GONZALO BARRERA',
+    session: 'LIVE SESSION',
+    date: 'SÁBADO 25 ENERO · 19:00 PM',
+    location: 'GÁLVEZ #49 CERRO CONCEPCIÓN',
+    city: 'VALPARAÍSO',
+    status: 'EDICIÓN ANTERIOR',
+  },
+];
 ---
 
 <Layout
@@ -118,6 +149,41 @@ import SubNav from '../components/SubNav.astro';
           </form>
         </div>
       </div>
+
+      <!-- ── Galería de Eventos Anteriores / Flyers ── -->
+      <div class="archive-card">
+        <div class="card-header">
+          <span class="eyebrow-tag">// HISTORIAL DE FECHAS</span>
+          <h2 class="section-label">EDICIONES ANTERIORES</h2>
+          <p class="section-lead">
+            Afiches y registros gráficos de las sesiones realizadas en Gálvez #49, Cerro Concepción, Valparaíso.
+          </p>
+        </div>
+
+        <div class="flyers-grid">
+          {flyers.map((flyer) => (
+            <article class="flyer-card">
+              <div class="flyer-media">
+                <img
+                  src={flyer.image}
+                  alt={`Flyer ${flyer.artist} — CRAZY ROOM`}
+                  class="flyer-img"
+                  loading="lazy"
+                />
+                <div class="flyer-badge-wrap">
+                  <span class="flyer-badge">{flyer.status}</span>
+                </div>
+              </div>
+              <div class="flyer-info">
+                <span class="flyer-session">{flyer.session}</span>
+                <h3 class="flyer-artist">{flyer.artist}</h3>
+                <p class="flyer-date">{flyer.date}</p>
+                <p class="flyer-loc">{flyer.location}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
 
@@ -161,7 +227,7 @@ import SubNav from '../components/SubNav.astro';
 <style>
   /* ── Layout containers ── */
   .container {
-    max-width: 860px;
+    max-width: 980px;
     margin: 0 auto;
     padding: 0 1.5rem;
     box-sizing: border-box;
@@ -281,6 +347,129 @@ import SubNav from '../components/SubNav.astro';
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 1px rgba(255, 255, 255, 0.08);
     box-sizing: border-box;
     max-width: 100%;
+  }
+
+  /* ── Archive Section (Eventos Anteriores) ── */
+  .archive-card {
+    position: relative;
+    z-index: 10000;
+    background: #0c0c0c;
+    border: 1px solid #222222;
+    border-top: 2px solid #ffffff;
+    padding: 3.5rem 3rem 4rem;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 1px rgba(255, 255, 255, 0.08);
+    box-sizing: border-box;
+    max-width: 100%;
+    margin-top: 3.5rem;
+  }
+
+  .flyers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    box-sizing: border-box;
+  }
+
+  .flyer-card {
+    background: #050505;
+    border: 1px solid #222222;
+    border-top: 1px solid #ffffff;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9);
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+
+  .flyer-card:hover {
+    border-color: #555555;
+    border-top-color: #ffffff;
+    transform: translateY(-4px);
+  }
+
+  .flyer-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #000000;
+  }
+
+  .flyer-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .flyer-card:hover .flyer-img {
+    transform: scale(1.05);
+  }
+
+  .flyer-badge-wrap {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 2;
+  }
+
+  .flyer-badge {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid #444444;
+    padding: 0.25rem 0.6rem;
+    color: #e0e0e0;
+    text-transform: uppercase;
+  }
+
+  .flyer-info {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    background: #080808;
+    border-top: 1px solid #1a1a1a;
+  }
+
+  .flyer-session {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    color: var(--gray-dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .flyer-artist {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.45rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    text-transform: uppercase;
+    margin: 0.1rem 0;
+    line-height: 1.15;
+  }
+
+  .flyer-date {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #cccccc;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .flyer-loc {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.8rem;
+    color: var(--gray-dim);
+    margin: 0;
+    line-height: 1.35;
   }
 
   .card-header {
@@ -610,6 +799,16 @@ import SubNav from '../components/SubNav.astro';
   @media (max-width: 768px) {
     .entradas-card {
       padding: 2.25rem 1.5rem 2.5rem;
+    }
+
+    .archive-card {
+      padding: 2.25rem 1.5rem 2.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .flyers-grid {
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
     }
 
     .newsletter-form {
