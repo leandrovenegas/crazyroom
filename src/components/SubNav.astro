@@ -1,0 +1,124 @@
+---
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+
+// Normalizar la ruta para comparar (remover trailing slash si existe, excepto para '/')
+const normalizedPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
+
+const navItems = [
+  { name: 'CONVOCATORIA', href: '/' },
+  { name: 'VIDEOS', href: '/videos' },
+  { name: 'ENTRADAS', href: '/entradas' },
+  { name: 'SHOP', href: '/shop' },
+];
+---
+
+<nav class="sub-nav" aria-label="Navegación principal">
+  {navItems.map((item) => {
+    const isActive = normalizedPath === item.href;
+    return (
+      <a
+        href={item.href}
+        class={`sub-nav-link ${isActive ? 'active' : ''}`}
+        aria-current={isActive ? 'page' : undefined}
+      >
+        {isActive && <span class="nav-indicator" aria-hidden="true">//</span>}
+        {item.name}
+      </a>
+    );
+  })}
+</nav>
+
+<style>
+  .sub-nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    background: rgba(12, 12, 12, 0.9);
+    border: 1px solid #222222;
+    border-top: 1px solid #ffffff;
+    padding: 0.35rem 0.45rem;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.95), 0 0 1px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    margin-top: 1.5rem;
+    max-width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 10003;
+  }
+
+  .sub-nav-link {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(0.82rem, 2vw, 1.02rem);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #999999;
+    padding: 0.5rem 1.15rem;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 1px solid transparent;
+    box-sizing: border-box;
+    white-space: nowrap;
+  }
+
+  .sub-nav-link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #333333;
+  }
+
+  .sub-nav-link.active {
+    color: #000000;
+    background: #ffffff;
+    font-weight: 900;
+    border-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+  }
+
+  .nav-indicator {
+    font-weight: 900;
+    color: #000000;
+    font-size: 0.9em;
+  }
+
+  @media (max-width: 640px) {
+    .sub-nav {
+      gap: 0.25rem;
+      padding: 0.25rem;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .sub-nav-link {
+      padding: 0.45rem 0.65rem;
+      font-size: 0.76rem;
+      letter-spacing: 0.1em;
+      flex: 1 1 auto;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .sub-nav {
+      max-width: 100%;
+      gap: 0.2rem;
+    }
+
+    .sub-nav-link {
+      padding: 0.4rem 0.45rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+    }
+  }
+</style>

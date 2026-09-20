@@ -1,0 +1,1031 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SubNav from '../components/SubNav.astro';
+
+// Datos de producto (fáciles de modificar)
+const product = {
+  name: 'CRAZY ROOM // 001',
+  subname: 'OVERSIZED HEAVYWEIGHT TEE',
+  price: '$25.000 CLP',
+  edition: 'EDICIÓN LIMITADA · 50 UNIDADES',
+  images: [
+    { src: '/tshirt-front.jpg', label: 'VISTA FRONTAL' },
+    { src: '/tshirt-back.jpg', label: 'VISTA ESPALDA' },
+  ],
+  sizes: [
+    { size: 'S', width: '56 cm', length: '72 cm', available: true },
+    { size: 'M', width: '59 cm', length: '75 cm', available: true },
+    { size: 'L', width: '62 cm', length: '78 cm', available: true },
+    { size: 'XL', width: '65 cm', length: '81 cm', available: true },
+  ],
+  specs: [
+    '100% Algodón Peinado Heavyweight (240 GSM)',
+    'Corte Boxy / Oversized con hombros caídos',
+    'Cuello grueso acanalado 3 cm reforzado',
+    'Serigrafía al agua indeleble de alta durabilidad',
+    'Hecho e impreso en Chile',
+  ],
+};
+---
+
+<Layout
+  title="CRAZY ROOM — SHOP"
+  description="Polera oficial de CRAZY ROOM Valparaíso. 100% Algodón Heavyweight 240 GSM. Edición limitada en tallas S, M, L, XL."
+>
+  <!-- ════════════════════════════════════════ -->
+  <!--  HERO                                    -->
+  <!-- ════════════════════════════════════════ -->
+  <header class="hero">
+    <img
+      src="/hero-shop.jpg"
+      alt=""
+      class="hero-bg-img"
+      aria-hidden="true"
+      draggable="false"
+    />
+    <div class="hero-overlay"></div>
+
+    <div class="hero-inner">
+      <p class="hero-eyebrow">VALPARAÍSO</p>
+      <h1 class="hero-title">
+        <a href="/" class="logo-link" title="Volver al inicio">
+          <img
+            src="/logo.png"
+            alt="CRAZY ROOM — REC LIVE SESSION"
+            class="hero-logo"
+            draggable="false"
+          />
+        </a>
+      </h1>
+      <!-- SubNav bar justo debajo del logo -->
+      <SubNav currentPath="/shop" />
+    </div>
+    <div class="hero-line"></div>
+  </header>
+
+  <!-- ════════════════════════════════════════ -->
+  <!--  SHOP SECTION                            -->
+  <!-- ════════════════════════════════════════ -->
+  <section class="shop-section">
+    <div class="container">
+      <div class="shop-header">
+        <span class="eyebrow-tag">// OFFICIAL MERCHANDISE</span>
+        <h2 class="section-label">SHOP & INDUMENTARIA</h2>
+        <p class="section-lead">
+          Prendas diseñadas bajo los estándares del club: peso pesado, calce amplio y gráfica industrial serigrafiada.
+        </p>
+      </div>
+
+      <div class="product-grid">
+        <!-- ── Galería de Producto ── -->
+        <div class="gallery-col">
+          <div class="main-image-card">
+            <div class="card-badge">
+              <span class="badge-dot"></span>
+              <span>{product.edition}</span>
+            </div>
+            <img
+              id="main-img"
+              src={product.images[0].src}
+              alt="CRAZY ROOM Official T-Shirt"
+              class="product-main-img"
+              draggable="false"
+            />
+          </div>
+
+          <!-- Miniaturas -->
+          <div class="thumbs-row">
+            {product.images.map((img, index) => (
+              <button
+                type="button"
+                class={`thumb-btn ${index === 0 ? 'active' : ''}`}
+                data-src={img.src}
+                aria-label={`Ver ${img.label}`}
+              >
+                <img src={img.src} alt={img.label} class="thumb-img" />
+                <span class="thumb-label">{img.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- ── Detalles de Producto ── -->
+        <div class="details-col">
+          <div class="details-card">
+            <div class="product-title-group">
+              <span class="product-sku">REF: CR-TEE-001 // VALPARAÍSO</span>
+              <h3 class="product-name">{product.name}</h3>
+              <p class="product-subtitle">{product.subname}</p>
+              <div class="price-box">
+                <span class="price-value">{product.price}</span>
+                <span class="stock-pill">DISPONIBLE</span>
+              </div>
+            </div>
+
+            <!-- Selector de Tallas -->
+            <div class="size-section">
+              <div class="size-header">
+                <label class="section-subtitle">TALLA DISPONIBLE:</label>
+                <span id="selected-size-text" class="selected-badge">TALLA SELECCIONADA: M</span>
+              </div>
+              <div class="size-buttons">
+                {product.sizes.map((s) => (
+                  <button
+                    type="button"
+                    class={`size-btn ${s.size === 'M' ? 'active' : ''}`}
+                    data-size={s.size}
+                  >
+                    {s.size}
+                  </button>
+                ))}
+              </div>
+              <p class="fit-tip">
+                * Calce Boxy / Oversized. Si prefieres un ajuste convencional, escoge una talla menos.
+              </p>
+            </div>
+
+            <!-- Tabla de Medidas -->
+            <details class="size-guide-details">
+              <summary class="size-guide-summary">
+                <span>// VER TABLA DE MEDIDAS (CM)</span>
+                <span class="toggle-icon">+</span>
+              </summary>
+              <div class="size-table-wrap">
+                <table class="size-table">
+                  <thead>
+                    <tr>
+                      <th>TALLA</th>
+                      <th>ANCHO (PECHO)</th>
+                      <th>LARGO TOTAL</th>
+                      <th>ESTADO</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {product.sizes.map((s) => (
+                      <tr>
+                        <td><strong>{s.size}</strong></td>
+                        <td>{s.width}</td>
+                        <td>{s.length}</td>
+                        <td><span class="table-stock">EN STOCK</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </details>
+
+            <!-- Especificaciones -->
+            <div class="specs-section">
+              <span class="section-subtitle">ESPECIFICACIONES TÉCNICAS:</span>
+              <ul class="specs-list">
+                {product.specs.map((spec) => (
+                  <li>{spec}</li>
+                ))}
+              </ul>
+            </div>
+
+            <!-- Botones de Compra -->
+            <div class="cta-section">
+              <a
+                id="whatsapp-buy-btn"
+                href="https://wa.me/?text=Hola%20CRAZY%20ROOM,%20quiero%20comprar%20la%20polera%20oficial%20CRAZY%20ROOM%20001%20en%20talla%20M"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="buy-btn"
+              >
+                <span class="btn-text">COMPRAR / RESERVAR VÍA WHATSAPP</span>
+                <span class="btn-arrow">→</span>
+              </a>
+
+              <a
+                href="https://www.instagram.com/crazyroom.cl/?hl=es"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="secondary-btn"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/>
+                </svg>
+                <span>CONSULTAR POR INSTAGRAM (@CRAZYROOM.CL)</span>
+              </a>
+            </div>
+
+            <!-- Despacho / Entregas -->
+            <div class="shipping-info">
+              <div class="shipping-item">
+                <span class="shipping-icon">→</span>
+                <span><strong>Envíos a todo Chile:</strong> Starken o Chilexpress por pagar.</span>
+              </div>
+              <div class="shipping-item">
+                <span class="shipping-icon">→</span>
+                <span><strong>Retiro presencial:</strong> Valparaíso centro (coordinación previa).</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════ -->
+  <!--  FOOTER                                  -->
+  <!-- ════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <p class="footer-brand">CRAZY ROOM</p>
+        <nav class="footer-links">
+          <a
+            href="https://www.instagram.com/crazyroom.cl/?hl=es"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-link"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/>
+            </svg>
+            Instagram
+          </a>
+          <a
+            href="https://www.youtube.com/@CRAZYROOMCL"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-link"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"/>
+            </svg>
+            YouTube
+          </a>
+        </nav>
+        <p class="footer-copy">© 2024 CRAZY ROOM — Valparaíso</p>
+      </div>
+    </div>
+  </footer>
+</Layout>
+
+<style>
+  .container {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    box-sizing: border-box;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 1.5rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    z-index: 10000;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.85;
+    filter: contrast(115%) brightness(0.85);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10001;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgba(5,5,5,0.2) 0%,
+      rgba(5,5,5,0.25) 50%,
+      rgba(5,5,5,0.85) 85%,
+      rgba(5,5,5,1) 100%
+    );
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 10002;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .hero-eyebrow {
+    font-size: 1rem;
+    letter-spacing: 0.4em;
+    color: #e0e0e0;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'Barlow Condensed', sans-serif;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.95);
+  }
+
+  .hero-title {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+  }
+
+  .logo-link {
+    display: block;
+    text-decoration: none;
+  }
+
+  .hero-logo {
+    width: 100%;
+    max-width: 680px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 20px rgba(0,0,0,0.9)) drop-shadow(0 0 2px rgba(255,255,255,0.15));
+    -webkit-user-drag: none;
+  }
+
+  .hero-line {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 4rem;
+    background: linear-gradient(to bottom, transparent, var(--border));
+  }
+
+  /* ── SHOP SECTION ── */
+  .shop-section {
+    padding: 3rem 0 7rem;
+    position: relative;
+    background: #050505;
+  }
+
+  .shop-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .eyebrow-tag {
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    color: var(--gray-dim);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-label {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin-bottom: 0.75rem;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+
+  .section-lead {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    color: #cccccc;
+    line-height: 1.6;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
+    margin: 0;
+  }
+
+  /* Grid: 2 columnas */
+  .product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    position: relative;
+    z-index: 10000;
+    align-items: start;
+  }
+
+  /* ── Columna de Galería ── */
+  .gallery-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .main-image-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #0c0c0c;
+    border: 1px solid #222222;
+    border-top: 2px solid #ffffff;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid #444444;
+    padding: 0.4rem 0.8rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    color: #ffffff;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .badge-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 0 8px #ffffff;
+  }
+
+  .product-main-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.25s ease-in-out;
+  }
+
+  .thumbs-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .thumb-btn {
+    position: relative;
+    background: #0c0c0c;
+    border: 1px solid #333333;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .thumb-btn:hover {
+    border-color: #888888;
+  }
+
+  .thumb-btn.active {
+    border: 2px solid #ffffff;
+  }
+
+  .thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .thumb-label {
+    position: absolute;
+    bottom: 0.4rem;
+    left: 0.4rem;
+    right: 0.4rem;
+    background: rgba(0, 0, 0, 0.8);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #ffffff;
+    text-align: center;
+    padding: 0.25rem;
+    text-transform: uppercase;
+  }
+
+  /* ── Columna de Detalles ── */
+  .details-col {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .details-card {
+    background: #0c0c0c;
+    border: 1px solid #222222;
+    border-top: 2px solid #ffffff;
+    padding: 3rem 2.5rem 3.5rem;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 1px rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    box-sizing: border-box;
+  }
+
+  .product-sku {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    color: var(--gray-dim);
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+
+  .product-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin: 0;
+  }
+
+  .product-subtitle {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: #aaaaaa;
+    text-transform: uppercase;
+    margin: 0.25rem 0 0;
+  }
+
+  .price-box {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #222222;
+  }
+
+  .price-value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+  }
+
+  .stock-pill {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: #000000;
+    background: #ffffff;
+    padding: 0.3rem 0.6rem;
+    font-weight: 700;
+  }
+
+  /* ── Selector de Tallas ── */
+  .size-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .size-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .section-subtitle {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #ffffff;
+    text-transform: uppercase;
+  }
+
+  .selected-badge {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--gray-dim);
+  }
+
+  .size-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+  }
+
+  .size-btn {
+    background: #000000;
+    border: 1px solid #444444;
+    color: #ffffff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    padding: 0.85rem 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .size-btn:hover {
+    border-color: #ffffff;
+  }
+
+  .size-btn.active {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+  }
+
+  .fit-tip {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.85rem;
+    color: var(--gray-dim);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  /* Tabla de Medidas Dropdown */
+  .size-guide-details {
+    border: 1px solid #222222;
+    background: #000000;
+  }
+
+  .size-guide-summary {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #cccccc;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    user-select: none;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .size-guide-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .size-guide-summary:hover {
+    color: #ffffff;
+    background: #0a0a0a;
+  }
+
+  .toggle-icon {
+    font-size: 1.2rem;
+    font-family: monospace;
+  }
+
+  .size-table-wrap {
+    padding: 0 1rem 1rem;
+    overflow-x: auto;
+  }
+
+  .size-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    text-align: left;
+  }
+
+  .size-table th,
+  .size-table td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid #222222;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.08em;
+  }
+
+  .size-table th {
+    color: var(--gray-dim);
+    font-weight: 700;
+    font-size: 0.75rem;
+  }
+
+  .size-table td {
+    color: #e0e0e0;
+    font-size: 0.95rem;
+  }
+
+  .table-stock {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    color: #88ff88;
+  }
+
+  /* Especificaciones */
+  .specs-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #222222;
+  }
+
+  .specs-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  .specs-list li {
+    position: relative;
+    padding-left: 1.25rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    color: #cccccc;
+    line-height: 1.5;
+  }
+
+  .specs-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--gray-dim);
+  }
+
+  /* CTAs de Compra */
+  .cta-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 1rem;
+  }
+
+  .buy-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: var(--white);
+    color: var(--black);
+    text-decoration: none;
+    padding: 1.25rem 1.75rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: background 0.2s, color 0.2s;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .buy-btn:hover {
+    background: var(--off-white);
+  }
+
+  .btn-arrow {
+    font-size: 1.35rem;
+    font-family: inherit;
+  }
+
+  .secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: #000000;
+    color: #e0e0e0;
+    border: 1px solid #444444;
+    text-decoration: none;
+    padding: 0.9rem 1.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .secondary-btn:hover {
+    border-color: #ffffff;
+    color: #ffffff;
+    background: #111111;
+  }
+
+  /* Despacho */
+  .shipping-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: #000000;
+    border: 1px solid #222222;
+    padding: 1rem 1.25rem;
+  }
+
+  .shipping-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.85rem;
+    color: var(--gray-dim);
+    line-height: 1.4;
+  }
+
+  .shipping-icon {
+    font-family: monospace;
+    color: #ffffff;
+  }
+
+  .shipping-item strong {
+    color: #e0e0e0;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 0;
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .footer-brand {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    color: var(--white);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .footer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--gray-dim);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .footer-link:hover {
+    color: var(--white);
+  }
+
+  .footer-copy {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--gray-dim);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .product-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .details-card {
+      padding: 2.25rem 1.5rem 2.5rem;
+    }
+
+    .hero {
+      padding: 3rem 1.25rem 2.5rem;
+      min-height: 80svh;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+    }
+
+    .footer-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+    }
+
+    .footer-links {
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      padding: 0 1rem;
+    }
+
+    .shop-section {
+      padding: 2rem 0 4rem;
+    }
+
+    .size-buttons {
+      gap: 0.5rem;
+    }
+
+    .size-btn {
+      padding: 0.75rem 0.25rem;
+      font-size: 1.05rem;
+    }
+
+    .buy-btn {
+      padding: 1rem 1.25rem;
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<script>
+  // ── Interacción Galería: Click en miniatura cambia la foto principal ──
+  const mainImg = document.getElementById('main-img') as HTMLImageElement | null;
+  const thumbBtns = document.querySelectorAll<HTMLButtonElement>('.thumb-btn');
+
+  thumbBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const newSrc = btn.getAttribute('data-src');
+      if (mainImg && newSrc && mainImg.src !== newSrc) {
+        mainImg.style.opacity = '0.3';
+        setTimeout(() => {
+          mainImg.src = newSrc;
+          mainImg.style.opacity = '1';
+        }, 150);
+
+        thumbBtns.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+    });
+  });
+
+  // ── Interacción Tallas: Selección actualiza texto y enlace dinámico de WhatsApp ──
+  let currentSize = 'M';
+  const sizeBtns = document.querySelectorAll<HTMLButtonElement>('.size-btn');
+  const selectedSizeText = document.getElementById('selected-size-text');
+  const whatsappBuyBtn = document.getElementById('whatsapp-buy-btn') as HTMLAnchorElement | null;
+
+  function updateWhatsAppLink(size: string) {
+    if (whatsappBuyBtn) {
+      const message = `Hola CRAZY ROOM, quiero comprar la polera oficial CRAZY ROOM 001 en talla ${size}`;
+      whatsappBuyBtn.href = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    }
+  }
+
+  sizeBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const size = btn.getAttribute('data-size');
+      if (size) {
+        currentSize = size;
+        sizeBtns.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (selectedSizeText) {
+          selectedSizeText.textContent = `TALLA SELECCIONADA: ${currentSize}`;
+        }
+
+        updateWhatsAppLink(currentSize);
+      }
+    });
+  });
+</script>
